@@ -425,54 +425,129 @@ const UPDATE_TEMPLATES = {
     ]
 };
 
-// AC 프로그램 데이터
-const AC_PROGRAMS = [
+// 해외진출 프로그램 데이터
+const OVERSEAS_PROGRAMS = [
     {
-        id: 'scg-global-accelerator',
-        title: 'SCG Global Accelerator 2024',
-        description: '아시아 진출을 꿈꾸는 한국 스타트업을 위한 글로벌 액셀러레이션 프로그램',
-        partner: 'SCG x Google for Startups',
-        logo: '🚀',
-        videoLink: 'https://youtube.com/watch?v=sample',
-        applyLink: 'https://apply.scg-accelerator.com',
+        id: 'taiwan-expansion',
+        title: 'SCG 대만 진출 프로그램',
+        description: '글로벌 경제활황의 아시아 또다른 시장 연결, 대만 진출을 위한 Advanced Program',
+        region: '대만 (Taiwan)',
+        logo: '🇹🇼',
+        cost: '참가비 유료 (최대 가성비 프로그램)',
+        duration: '2박 3일',
+        applyLink: 'https://forms.gle/taiwan2025',
         timeline: `
 **프로그램 일정:**
-- 지원 마감: 2024년 10월 15일
-- 선정 발표: 2024년 11월 1일  
-- 프로그램 기간: 2024년 11월 ~ 2025년 2월 (4개월)
-- 데모데이: 2025년 2월 28일
+- 1차: 2025년 9월 28일(일) ~ 30일(화)
+- 2차: 2025년 10월 26일(일) ~ 28일(화)
+- 신청 기간: 2025년 8월 15일까지
 
-**지원 내용:**
-- 투자금: 최대 2억원 + 후속 투자 연계
-- 멘토링: 업계 전문가 1:1 멘토링
-- 글로벌 진출: 싱가포르, 홍콩, 베트남 현지 지원
-- 네트워킹: 투자자/바이어 연결`,
+**프로그램 진행:**
+- 사전 신청 → 개별 프로그램 안내 미팅
+- 대만 시장 진출 전략 수립
+- 한장 영문 소개서 제작 및 컨설팅
+- 투자자 및 바이어 대상 홍보 및 사전 연계
+- 1:1 IR 컨설팅 및 영문 발표 훈련
+- 현장 데모데이 및 투자자/바이어 미팅 진행`,
         status: '모집 중',
-        participants: 16,
-        categories: ['ADBM', 'BH', 'RS']
+        participants: '회당 20개 기업',
+        categories: ['ADBM', 'CL', 'M4', 'BH', 'RS'],
+        targetIndustries: {
+            '1차': 'AI, 핀테크, 블록체인, 메타버스, XR, 플랫폼, SaaS, 콘텐츠, 스포테인먼트, 에듀테크, 마테크',
+            '2차': '소부장, UAM, 드론, 로봇, 로봇틱스, AI반도체/시스템반도체, 그린테크, 에너지, 바이오, 디지털헬스케어, 푸드테크, 패션테크, 펫테크, 스마트팩토리, 스마트팜, 스마트시티'
+        }
     },
     {
-        id: 'biotech-incubator',
-        title: 'K-BioTech Incubator Program',
-        description: '바이오/헬스케어 분야 특화 인큐베이션 프로그램',
-        partner: '한국바이오협회 x 삼성바이오로직스',
-        logo: '🧬',
-        videoLink: 'https://youtube.com/watch?v=biotech',
-        applyLink: 'https://k-biotech.kr/apply',
+        id: 'north-america-expansion',
+        title: 'SCG 북미 시장 진출 프로그램',
+        description: '전 세계 투자금의 50% 이상이 집중되는 북미 시장 진출을 위한 6개월 구조화된 솔루션',
+        region: '북미 (미국/캐나다)',
+        logo: '🇺🇸',
+        cost: '550만원 (VAT 포함) - 할인가 적용',
+        originalCost: '1,380만원 → 550만원',
+        successFee: '성과 수수료 5%',
+        duration: '6개월 (9월-12월)',
+        applyLink: 'https://forms.gle/KpTPBsHThFKCC2b76',
+        timeline: `
+**프로그램 일정:**
+- 신청 기간: 6월 4일 ~ 8월 21일 오후 2시
+- 진행 기간: 9월 1일 ~ 12월 27일
+- 글로벌 온라인 데모데이: 11월 10일/11일/12일 (총 3회)
+
+**핵심 혜택:**
+- 북미 시장 진출 전략 교육
+- 글로벌 VC 대상 실전 IR 발표 기회
+- 미국·캐나다 AC와 1:1 심층 매칭 미팅
+- 정부·공공기관 연계 프로그램 설명회
+- IR덱·영문 소개서·기업 홍보영상 고도화
+- 북미 도시 맞춤형 진출 전략 수립 및 법인설립 자문`,
+        status: '모집 중',
+        participants: '회당 10-20개 기업 발표',
+        categories: ['ADBM', 'BH', 'CL', 'M4'],
+        targetIndustries: {
+            '주요분야': 'AI, 바이오, 클린테크, 미래 제조업 등 4차 산업 기반 신산업'
+        }
+    },
+    {
+        id: 'indonesia-expansion',
+        title: 'SCG 인도네시아 진출 프로그램',
+        description: '동남아 최대 시장 인도네시아 진출을 위한 현지 파트너링 및 사업 확장 프로그램',
+        region: '인도네시아',
+        logo: '🇮🇩',
+        cost: '699만원 (VAT 포함)',
+        duration: '3-4개월',
+        applyLink: 'https://forms.gle/indonesia2025',
         timeline: `
 **프로그램 특징:**
-- 기간: 6개월 집중 프로그램
-- 투자: 시드 투자 최대 5억원
-- 임상: 임상시험 설계 및 규제 지원
-- 글로벌: FDA/EMA 승인 컨설팅
+- 최대 가성비 프로그램으로 설정
+- 현지 파트너사와의 직접 연결
+- 인도네시아 정부 기관 연계
+- 현지 시장 조사 및 진출 전략 수립
 
-**선정 혜택:**
-- 전용 랩 공간 제공
-- 임상 CRO 서비스 할인
-- 글로벌 제약사 파트너링`,
-        status: '심사 중',
-        participants: 8,
-        categories: ['BH']
+**주요 혜택:**
+- 현지 바이어 및 파트너 매칭
+- 정부 기관 미팅 주선
+- 법인 설립 및 라이센스 지원
+- 현지 유통망 연결 지원`,
+        status: '모집 중',
+        participants: '선별 모집',
+        categories: ['CL', 'M4', 'BH'],
+        targetIndustries: {
+            '주요분야': '제조업, 소비재, 헬스케어, 디지털 서비스'
+        }
+    },
+    {
+        id: 'hongkong-expansion',
+        title: 'Hongkong K-STARTUP 프로그램',
+        description: '아시아 금융 허브이자 글로벌 비즈니스의 중심지 홍콩 진출 프로그램',
+        region: '홍콩 (Hong Kong)',
+        logo: '🇭🇰',
+        cost: '문의',
+        duration: '6개월',
+        applyLink: 'https://forms.gle/hongkong2025',
+        timeline: `
+**프로그램 구성:**
+- 1:1 사전 미팅 및 역량 강화
+- 데모데이 (Closed IR) & 비즈니스 상담
+- 홍콩정부 인정 AC 프로그램 연계
+- 홍콩 Soft Landing 지원
+
+**주요 혜택:**
+- 투자자 매칭 및 전략적 파트너 매칭
+- 법인설립 및 기술·경영 지원
+- 멘토십 및 입주공간 제공
+- 대중화권-동북아권역의 거점 활용`,
+        status: '상시 모집',
+        participants: '선별 모집',
+        categories: ['ADBM', 'BH', 'M4'],
+        targetIndustries: {
+            '주요분야': '핀테크, AI, 바이오테크, 제조업 등 홍콩 주요 4대 산업 연계'
+        },
+        resources: {
+            '홍콩 투자정': 'https://www.investhk.gov.hk/en/',
+            '홍콩과학기술단지공사': 'https://www.hkstp.org/en/programmes',
+            '정책 안내': 'https://premiatnc.blog/2025%EB%85%84-%ED%99%8D%EC%BD%A9-%EC%83%88%EB%A1%9C%EC%9A%B4-%EC%A0%95%EC%B1%85-%EB%B3%80%ED%99%94/'
+        }
     }
 ];
 
@@ -604,7 +679,7 @@ const DataUtils = {
 if (typeof window !== 'undefined') {
     window.CATEGORIES = CATEGORIES;
     window.DEMO_COMPANIES = DEMO_COMPANIES;
-    window.AC_PROGRAMS = AC_PROGRAMS;
+    window.OVERSEAS_PROGRAMS = OVERSEAS_PROGRAMS;
     window.ANNOUNCEMENTS = ANNOUNCEMENTS;
     window.DataUtils = DataUtils;
 }
@@ -614,7 +689,7 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         CATEGORIES,
         DEMO_COMPANIES,
-        AC_PROGRAMS,
+        OVERSEAS_PROGRAMS,
         ANNOUNCEMENTS,
         DataUtils
     };

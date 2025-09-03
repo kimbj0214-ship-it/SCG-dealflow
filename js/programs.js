@@ -25,12 +25,13 @@ function renderPrograms() {
     const programsGrid = document.getElementById('programs-grid');
     if (!programsGrid) return;
 
-    programsGrid.innerHTML = AC_PROGRAMS.map(program => createProgramCard(program)).join('');
+    programsGrid.innerHTML = OVERSEAS_PROGRAMS.map(program => createProgramCard(program)).join('');
 }
 
 function createProgramCard(program) {
     const statusClass = program.status === '모집 중' ? 'bg-green-100 text-green-800' : 
                        program.status === '심사 중' ? 'bg-orange-100 text-orange-800' : 
+                       program.status === '상시 모집' ? 'bg-blue-100 text-blue-800' :
                        'bg-gray-100 text-gray-600';
 
     const categoryBadges = program.categories.map(cat => {
@@ -39,6 +40,17 @@ function createProgramCard(program) {
             ${categoryInfo.name}
         </span>`;
     }).join('');
+
+    // 비용 정보 표시
+    let costInfo = '';
+    if (program.cost === '문의') {
+        costInfo = '<span class="text-scg-blue font-semibold">비용 문의</span>';
+    } else if (program.originalCost) {
+        costInfo = `<span class="text-red-500 line-through text-sm">${program.originalCost}</span><br>
+                   <span class="text-green-600 font-bold text-lg">${program.cost}</span>`;
+    } else {
+        costInfo = `<span class="text-scg-blue font-semibold">${program.cost}</span>`;
+    }
 
     return `
         <div class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 group">
@@ -50,8 +62,8 @@ function createProgramCard(program) {
                         ${program.status}
                     </span>
                 </div>
-                <h3 class="text-2xl font-bold mb-2">${program.title}</h3>
-                <p class="text-blue-100 text-lg">${program.partner}</p>
+                <h3 class="text-xl font-bold mb-2">${program.title}</h3>
+                <p class="text-blue-100 text-lg">${program.region}</p>
             </div>
 
             <!-- Program Content -->
@@ -61,27 +73,35 @@ function createProgramCard(program) {
                     ${program.description}
                 </p>
 
+                <!-- Key Stats -->
+                <div class="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-scg-blue">${program.participants}</div>
+                        <div class="text-sm text-scg-gray">참여 규모</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-lg font-bold text-scg-blue">${program.duration}</div>
+                        <div class="text-sm text-scg-gray">프로그램 기간</div>
+                    </div>
+                </div>
+
+                <!-- Cost Information -->
+                <div class="mb-6 p-4 bg-blue-50 rounded-lg">
+                    <div class="text-center">
+                        <div class="text-sm text-scg-gray mb-1">참가비</div>
+                        <div>${costInfo}</div>
+                        ${program.successFee ? `<div class="text-sm text-scg-gray mt-1">${program.successFee}</div>` : ''}
+                    </div>
+                </div>
+
                 <!-- Category Tags -->
                 <div class="flex flex-wrap gap-2 mb-6">
                     ${categoryBadges}
                 </div>
 
-                <!-- Key Stats -->
-                <div class="grid grid-cols-2 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-scg-blue">${program.participants}</div>
-                        <div class="text-sm text-scg-gray">선정 기업</div>
-                    </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-scg-blue">4-6개월</div>
-                        <div class="text-sm text-scg-gray">프로그램 기간</div>
-                    </div>
-                </div>
-
                 <!-- Timeline Preview -->
                 <div class="mb-6">
                     <h4 class="font-semibold text-scg-dark mb-3">
-                        <i class="fas fa-calendar-alt text-scg-blue mr-2"></i>
                         프로그램 일정
                     </h4>
                     <div class="text-sm text-scg-gray space-y-1">
@@ -98,29 +118,23 @@ function createProgramCard(program) {
                 <div class="flex flex-col sm:flex-row gap-3">
                     <button class="flex-1 bg-scg-blue text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
                             onclick="applyToProgram('${program.id}')">
-                        <i class="fas fa-paper-plane mr-2"></i>
                         프로그램 지원
                     </button>
                     <button class="flex-1 border border-scg-blue text-scg-blue py-3 px-4 rounded-lg font-semibold hover:bg-scg-blue hover:text-white transition-colors"
-                            onclick="watchVideo('${program.videoLink}')">
-                        <i class="fas fa-play mr-2"></i>
-                        소개 영상
+                            onclick="showProgramDetail('${program.id}')">
+                        상세 정보
                     </button>
                 </div>
 
-                <!-- Additional Info -->
+                <!-- Target Industries -->
+                ${program.targetIndustries ? `
                 <div class="mt-4 pt-4 border-t border-gray-200">
-                    <div class="flex items-center justify-between text-sm text-scg-gray">
-                        <div class="flex items-center">
-                            <i class="fas fa-building mr-2"></i>
-                            <span>파트너: ${program.partner.split(' x ')[0]}</span>
-                        </div>
-                        <div class="flex items-center">
-                            <i class="fas fa-users mr-2"></i>
-                            <span>모집: ${program.participants}개 기업</span>
-                        </div>
+                    <div class="text-sm">
+                        <span class="font-semibold text-scg-dark">대상 분야:</span>
+                        <span class="text-scg-gray ml-2">${Object.values(program.targetIndustries)[0]}</span>
                     </div>
                 </div>
+                ` : ''}
             </div>
         </div>
     `;
@@ -153,7 +167,7 @@ function toggleFAQ(faqItem) {
 }
 
 function showProgramDetail(programId) {
-    const program = AC_PROGRAMS.find(p => p.id === programId);
+    const program = OVERSEAS_PROGRAMS.find(p => p.id === programId);
     if (!program) return;
 
     // Create modal for program details
@@ -167,7 +181,7 @@ function showProgramDetail(programId) {
                         <div class="text-3xl mr-4">${program.logo}</div>
                         <div>
                             <h3 class="text-2xl font-bold text-scg-dark">${program.title}</h3>
-                            <div class="text-scg-gray">${program.partner}</div>
+                            <div class="text-scg-gray">${program.region}</div>
                         </div>
                     </div>
                     <button onclick="closeModal(this)" class="text-scg-gray hover:text-scg-dark text-2xl">
@@ -205,17 +219,23 @@ function showProgramDetail(programId) {
                                     <span class="font-semibold text-green-600">${program.status}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-scg-gray">선정 기업</span>
-                                    <span class="font-semibold">${program.participants}개</span>
+                                    <span class="text-scg-gray">참여 규모</span>
+                                    <span class="font-semibold">${program.participants}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-scg-gray">기간</span>
-                                    <span class="font-semibold">4-6개월</span>
+                                    <span class="font-semibold">${program.duration}</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-scg-gray">투자 규모</span>
-                                    <span class="font-semibold">최대 2억원</span>
+                                    <span class="text-scg-gray">참가비</span>
+                                    <span class="font-semibold">${program.cost}</span>
                                 </div>
+                                ${program.region ? `
+                                <div class="flex justify-between">
+                                    <span class="text-scg-gray">진출 지역</span>
+                                    <span class="font-semibold">${program.region}</span>
+                                </div>
+                                ` : ''}
                             </div>
                         </div>
                         
@@ -225,10 +245,9 @@ function showProgramDetail(programId) {
                                 <i class="fas fa-paper-plane mr-2"></i>
                                 지원하기
                             </button>
-                            <button onclick="watchVideo('${program.videoLink}')" 
+                            <button onclick="contactProgram('${program.id}')" 
                                     class="w-full border border-scg-blue text-scg-blue py-3 px-4 rounded-lg font-semibold hover:bg-scg-blue hover:text-white transition-colors">
-                                <i class="fas fa-play mr-2"></i>
-                                소개 영상 보기
+                                프로그램 문의
                             </button>
                             <a href="${program.applyLink}" target="_blank"
                                class="block text-center w-full border border-gray-300 text-scg-gray py-3 px-4 rounded-lg font-semibold hover:bg-gray-50 transition-colors">
@@ -254,25 +273,57 @@ function showProgramDetail(programId) {
 }
 
 function applyToProgram(programId) {
-    const program = AC_PROGRAMS.find(p => p.id === programId);
+    const program = OVERSEAS_PROGRAMS.find(p => p.id === programId);
     if (!program) return;
 
-    // In a real application, this would open an application form
-    // For demo purposes, we'll show a simple alert
+    // Show application confirmation
     if (confirm(`${program.title}에 지원하시겠습니까?\n\n지원서 작성 페이지로 이동합니다.`)) {
-        // Redirect to application form or show application modal
-        window.open(program.applyLink, '_blank');
+        // Redirect to application form
+        if (program.applyLink) {
+            window.open(program.applyLink, '_blank');
+        }
         
         // Log the application attempt
         console.log('Program application:', {
             programId,
             programTitle: program.title,
+            region: program.region,
             timestamp: new Date().toISOString()
         });
         
         // Show success message
         showToast(`${program.title} 지원서 페이지로 이동합니다`, 'info');
     }
+}
+
+function contactProgram(programId) {
+    const program = OVERSEAS_PROGRAMS.find(p => p.id === programId);
+    if (!program) return;
+
+    // Show contact information
+    const contactInfo = `
+        ${program.title} 문의하기
+        
+        진출 지역: ${program.region}
+        프로그램 기간: ${program.duration}
+        참가비: ${program.cost}
+        
+        문의사항이나 상세 정보가 필요하시면 
+        전화 또는 이메일로 연락해주세요.
+        
+        📞 02-851-4992
+        📧 scgjob@scghuman.com
+    `;
+    
+    alert(contactInfo);
+    
+    // Log the contact attempt
+    console.log('Program contact inquiry:', {
+        programId,
+        programTitle: program.title,
+        region: program.region,
+        timestamp: new Date().toISOString()
+    });
 }
 
 function watchVideo(videoLink) {
