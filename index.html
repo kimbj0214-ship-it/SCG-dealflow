@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCG Dealflow Platform - 스타트업과 투자자를 연결하는 플랫폼</title>
+    <meta name="description" content="육성 기업과 투자자/바이어/AC/지자체 간 지속적인 노출, 업데이트, 미팅 연결을 자동화하는 게이트드 플랫폼">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'scg-blue': '#1e40af',
+                        'scg-dark': '#1e293b',
+                        'scg-gray': '#64748b',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="font-inter bg-white text-gray-900">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="text-2xl font-bold text-scg-blue">SCG</div>
+                    <div class="ml-2 text-lg font-semibold text-scg-dark">Dealflow</div>
+                </div>
+                
+                <div class="hidden md:flex space-x-8">
+                    <a href="companies.html" class="text-scg-gray hover:text-scg-blue transition-colors">기업찾기</a>
+                    <a href="programs.html" class="text-scg-gray hover:text-scg-blue transition-colors">프로그램</a>
+                    <a href="stories.html" class="text-scg-gray hover:text-scg-blue transition-colors">공지/성공사례</a>
+                    <a href="dashboard.html" class="text-scg-gray hover:text-scg-blue transition-colors">내 보관함</a>
+                </div>
+                
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-scg-gray hover:text-scg-blue">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-200">
+            <div class="px-4 py-3 space-y-3">
+                <a href="companies.html" class="block text-scg-gray hover:text-scg-blue">기업찾기</a>
+                <a href="programs.html" class="block text-scg-gray hover:text-scg-blue">프로그램</a>
+                <a href="stories.html" class="block text-scg-gray hover:text-scg-blue">공지/성공사례</a>
+                <a href="dashboard.html" class="block text-scg-gray hover:text-scg-blue">내 보관함</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="pt-24 pb-16 bg-gradient-to-br from-scg-blue to-blue-700 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Left: Content -->
+                <div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        기업 업데이트가<br>
+                        <span class="text-blue-200">'바로' 연결</span>로 이어집니다
+                    </h1>
+                    <p class="text-xl md:text-2xl mb-8 text-blue-100 leading-relaxed">
+                        월 3분 업데이트 → 1‑pager 이메일 전송 → 미팅 확정까지 하나로.
+                    </p>
+                    
+                    <!-- Trust Indicators -->
+                    <div class="grid grid-cols-3 gap-6 mb-8">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold" id="company-count">8</div>
+                            <div class="text-sm text-blue-200">참여 기업</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold" id="meeting-requests-count">24</div>
+                            <div class="text-sm text-blue-200">최근 30일 미팅요청</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold" id="onepager-sent-count">67</div>
+                            <div class="text-sm text-blue-200">보낸 원페이지</div>
+                        </div>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="companies.html" class="bg-white text-scg-blue px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-lg">
+                            기업 둘러보기
+                        </a>
+                        <button id="hero-login-btn" class="border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-scg-blue transition-colors">
+                            초대코드 입력
+                        </button>  
+                    </div>
+
+                    <!-- User State Widgets -->
+                    <!-- Guest State -->
+                    <div id="guest-widget" class="mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                        <div class="flex items-center">
+                            <div>
+                                <div class="font-semibold text-sm">초대 받은 분은 로그인하세요</div>
+                                <div class="text-xs text-blue-200">게이트드 플랫폼으로 초대코드가 필요합니다</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investor State (Hidden by default) -->
+                    <div id="investor-widget" class="hidden mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="font-semibold text-sm">내 보관함 요약</div>
+                                <div class="text-xs text-blue-200">즐겨찾기 <span id="favorites-count">0</span>개 · 미팅 대기 <span id="pending-meetings">0</span>개</div>
+                            </div>
+                            <a href="dashboard.html" class="text-white hover:text-blue-200 text-sm font-medium">
+                                보관함 →
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Company State (Hidden by default) -->
+                    <div id="company-widget" class="hidden mt-6 bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="font-semibold text-sm">이번 달 업데이트 제출</div>
+                                <div class="text-xs text-blue-200">
+                                    <span id="update-status">0/1</span> · 다음 마감: 9월 30일
+                                </div>
+                            </div>
+                            <button class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-lg text-sm font-medium">
+                                업데이트 제출
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Visual -->
+                <div class="lg:order-2">
+                    <div class="relative">
+                        <!-- Success Stories Carousel Preview -->
+                        <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
+                            <div class="text-center mb-6">
+                                <div class="text-4xl mb-3">🚀</div>
+                                <h3 class="text-xl font-bold mb-2">성공 사례</h3>
+                                <p class="text-blue-200 text-sm">플랫폼을 통해 성장한 기업들</p>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-white/10 rounded-lg p-4">
+                                    <div class="flex items-center mb-2">
+                                        <div class="text-lg mr-3">🤖</div>
+                                        <div>
+                                            <div class="font-semibold text-sm">네서스AI</div>
+                                            <div class="text-xs text-blue-200">시리즈A 30억 투자유치</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white/10 rounded-lg p-4">
+                                    <div class="flex items-center mb-2">
+                                        <div class="text-lg mr-3">🏥</div>
+                                        <div>
+                                            <div class="font-semibold text-sm">메드테크솔루션즈</div>
+                                            <div class="text-xs text-blue-200">FDA 승인 · 미국 진출</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-white/10 rounded-lg p-4">
+                                    <div class="flex items-center mb-2">
+                                        <div class="text-lg mr-3">📚</div>
+                                        <div>
+                                            <div class="font-semibold text-sm">에듀테크글로벌</div>
+                                            <div class="text-xs text-blue-200">동남아 5개국 진출</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="text-4xl font-bold text-scg-blue mb-2">70%+</div>
+                    <div class="text-lg font-semibold text-scg-dark mb-2">월간 업데이트율</div>
+                    <div class="text-scg-gray">기업별 월간 성과 업데이트 목표</div>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="text-4xl font-bold text-scg-blue mb-2">24h</div>
+                    <div class="text-lg font-semibold text-scg-dark mb-2">미팅 연결 시간</div>
+                    <div class="text-scg-gray">요청부터 캘린더 조율까지</div>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-sm">
+                    <div class="text-4xl font-bold text-scg-blue mb-2">35%+</div>
+                    <div class="text-lg font-semibold text-scg-dark mb-2">미팅 성사율</div>
+                    <div class="text-scg-gray">요청에서 실제 미팅까지 전환</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Top Category Strip (5개 분야) -->
+    <section class="py-8 bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-scg-dark mb-2">분야별 기업 탐색</h2>
+                <p class="text-scg-gray">관심 분야를 클릭하여 해당 기업들을 확인하세요</p>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-4" role="tablist">
+                <button class="sector-btn bg-blue-50 border-2 border-blue-200 hover:border-blue-400 text-blue-700 px-6 py-4 rounded-xl font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                        data-sector="ADBM" role="tab">
+                    <div>
+                        <div>AI/Data/Blockchain</div>
+                        <div class="text-xs font-normal">(<span class="sector-count">3</span>개 기업)</div>
+                    </div>
+                </button>
+                
+                <button class="sector-btn bg-pink-50 border-2 border-pink-200 hover:border-pink-400 text-pink-700 px-6 py-4 rounded-xl font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-pink-500" 
+                        data-sector="CL" role="tab">
+                    <div>
+                        <div>Content/Lifestyle</div>
+                        <div class="text-xs font-normal">(<span class="sector-count">1</span>개 기업)</div>
+                    </div>
+                </button>
+                
+                <button class="sector-btn bg-gray-50 border-2 border-gray-200 hover:border-gray-400 text-gray-700 px-6 py-4 rounded-xl font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-gray-500" 
+                        data-sector="M4" role="tab">
+                    <div>
+                        <div>Material/Manufacturing</div>
+                        <div class="text-xs font-normal">(<span class="sector-count">0</span>개 기업)</div>
+                    </div>
+                </button>
+                
+                <button class="sector-btn bg-green-50 border-2 border-green-200 hover:border-green-400 text-green-700 px-6 py-4 rounded-xl font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-green-500" 
+                        data-sector="BH" role="tab">
+                    <div>
+                        <div>Bio/Healthcare</div>
+                        <div class="text-xs font-normal">(<span class="sector-count">2</span>개 기업)</div>
+                    </div>
+                </button>
+                
+                <button class="sector-btn bg-purple-50 border-2 border-purple-200 hover:border-purple-400 text-purple-700 px-6 py-4 rounded-xl font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-purple-500" 
+                        data-sector="RS" role="tab">
+                    <div>
+                        <div>Robotics/Smart</div>
+                        <div class="text-xs font-normal">(<span class="sector-count">2</span>개 기업)</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Filter Grid (14개 세부 카테고리) -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <h3 class="text-xl font-bold text-scg-dark mb-2">세부 분야별 빠른 탐색</h3>
+                <p class="text-scg-gray">14개 세부 카테고리로 정확한 기업을 찾아보세요</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4" id="subcategory-grid">
+                <!-- ADBM Subcategories -->
+                <button class="subcategory-btn bg-white hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="ADBM-01">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🧠</div>
+                    <div class="text-xs font-semibold text-scg-dark">AI Infra/Agent</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="ADBM-02">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">📊</div>
+                    <div class="text-xs font-semibold text-scg-dark">Data/Analytics</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="ADBM-03">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">⛓️</div>
+                    <div class="text-xs font-semibold text-scg-dark">Blockchain/Web3</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="ADBM-04">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🥽</div>
+                    <div class="text-xs font-semibold text-scg-dark">XR/Metaverse</div>
+                </button>
+                
+                <!-- CL Subcategories -->
+                <button class="subcategory-btn bg-white hover:bg-pink-50 border-2 border-gray-200 hover:border-pink-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="CL-01">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🎨</div>
+                    <div class="text-xs font-semibold text-scg-dark">Digital Content</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-pink-50 border-2 border-gray-200 hover:border-pink-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="CL-02">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🛍️</div>
+                    <div class="text-xs font-semibold text-scg-dark">Commerce/Brand</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-pink-50 border-2 border-gray-200 hover:border-pink-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="CL-03">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">📚</div>
+                    <div class="text-xs font-semibold text-scg-dark">Edu/HRTech</div>
+                </button>
+                
+                <!-- M4 Subcategories -->
+                <button class="subcategory-btn bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="M4-01">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🧪</div>
+                    <div class="text-xs font-semibold text-scg-dark">New Material</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="M4-02">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🏭</div>
+                    <div class="text-xs font-semibold text-scg-dark">Manufacturing/Factory</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-gray-50 border-2 border-gray-200 hover:border-gray-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="M4-03">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🚗</div>
+                    <div class="text-xs font-semibold text-scg-dark">Mobility/EV/Drone</div>
+                </button>
+                
+                <!-- BH Subcategories -->
+                <button class="subcategory-btn bg-white hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="BH-01">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🏥</div>
+                    <div class="text-xs font-semibold text-scg-dark">MedTech/Device</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="BH-02">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">💊</div>
+                    <div class="text-xs font-semibold text-scg-dark">Digital Health/Pharma</div>
+                </button>
+                
+                <!-- RS Subcategories -->
+                <button class="subcategory-btn bg-white hover:bg-purple-50 border-2 border-gray-200 hover:border-purple-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="RS-01">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🤖</div>
+                    <div class="text-xs font-semibold text-scg-dark">Robotics</div>
+                </button>
+                
+                <button class="subcategory-btn bg-white hover:bg-purple-50 border-2 border-gray-200 hover:border-purple-300 p-4 rounded-xl transition-all text-center group" 
+                        data-subcategory="RS-02">
+                    <div class="text-2xl mb-2 group-hover:scale-110 transition-transform">🏙️</div>
+                    <div class="text-xs font-semibold text-scg-dark">Smart City/IoT</div>
+                </button>
+            </div>
+            
+            <!-- Mobile: Show More Button -->
+            <div class="text-center mt-6 md:hidden">
+                <button id="show-more-subcategories" class="text-scg-blue hover:text-blue-700 font-medium text-sm">
+                    더 많은 분야 보기 <i class="fas fa-chevron-down ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Updates Slider -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-scg-dark mb-2">최근 업데이트</h2>
+                    <p class="text-scg-gray">기업들의 최신 성과와 소식을 확인하세요</p>
+                </div>
+                <div class="hidden md:flex gap-2">
+                    <button id="updates-prev" class="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-chevron-left text-scg-gray"></i>
+                    </button>
+                    <button id="updates-next" class="p-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-chevron-right text-scg-gray"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Updates Slider Container -->
+            <div class="relative overflow-hidden">
+                <div id="updates-slider" class="flex gap-6 transition-transform duration-300">
+                    <!-- Update cards will be inserted here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Mobile Dots -->
+            <div class="flex justify-center mt-6 md:hidden">
+                <div id="updates-dots" class="flex gap-2">
+                    <!-- Dots will be inserted here -->
+                </div>
+            </div>
+            
+            <!-- View All Button -->
+            <div class="text-center mt-8">
+                <a href="companies.html" class="bg-scg-blue text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-list mr-2"></i>
+                    모든 기업 보기
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-scg-dark mb-4">
+                    핵심 기능
+                </h2>
+                <p class="text-xl text-scg-gray max-w-3xl mx-auto">
+                    월간 업데이트부터 미팅 매칭까지, 딜플로우의 모든 과정을 자동화합니다
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Monthly Updates -->
+                <div>
+                    <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mb-6">
+                        <span class="text-2xl">📅</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-scg-dark mb-4">월간 업데이트 자동화</h3>
+                    <p class="text-scg-gray mb-6">
+                        기업의 성장 스토리를 6-7개 항목으로 체계적으로 수집하고, 
+                        투자자에게 지속적으로 노출시킵니다.
+                    </p>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-trophy text-yellow-500 mr-3 mt-1"></i>
+                            <div>
+                                <div class="font-semibold text-scg-dark">Award/Press</div>
+                                <div class="text-sm text-scg-gray">수상 내역 및 언론 보도</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-flask text-blue-500 mr-3 mt-1"></i>
+                            <div>
+                                <div class="font-semibold text-scg-dark">R&D/Project</div>
+                                <div class="text-sm text-scg-gray">연구개발 및 과제 진행</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-lightbulb text-purple-500 mr-3 mt-1"></i>
+                            <div>
+                                <div class="font-semibold text-scg-dark">IP/특허</div>
+                                <div class="text-sm text-scg-gray">지적재산권 출원/등록</div>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-rocket text-green-500 mr-3 mt-1"></i>
+                            <div>
+                                <div class="font-semibold text-scg-dark">Product/Launch</div>
+                                <div class="text-sm text-scg-gray">제품 출시 및 고객 반응</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-2xl">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">📊</div>
+                        <h4 class="text-xl font-bold text-scg-dark mb-2">3분 내 간편 제출</h4>
+                        <p class="text-scg-gray">이전 달 내용 자동 프리필 + 링크만 교체</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-20">
+                <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-2xl lg:order-1">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">📧</div>
+                        <h4 class="text-xl font-bold text-scg-dark mb-2">추적 가능한 이메일</h4>
+                        <p class="text-scg-gray">열람/클릭 이벤트 완전 추적</p>
+                    </div>
+                </div>
+
+                <!-- One-pager Email -->
+                <div class="lg:order-2">
+                    <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mb-6">
+                        <span class="text-green-600 text-2xl font-bold">📧</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-scg-dark mb-4">원페이지 이메일 발송</h3>
+                    <p class="text-scg-gray mb-6">
+                        다운로드를 방지하고 이메일을 통해서만 전달되는 
+                        보안 강화된 원페이지 시스템입니다.
+                    </p>
+                    <div class="bg-white p-6 rounded-xl border border-gray-200">
+                        <div class="flex items-center mb-4">
+                            <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-yellow-500 rounded-full mr-2"></div>
+                            <div class="w-3 h-3 bg-green-500 rounded-full mr-4"></div>
+                            <div class="text-sm text-scg-gray">📧 원페이지 요청 메일</div>
+                        </div>
+                        <div class="space-y-2 text-sm">
+                            <div><strong>To:</strong> 투자자 이메일</div>
+                            <div><strong>CC:</strong> 기업 담당자</div>
+                            <div><strong>BCC:</strong> SCG 공용 (최대 4명)</div>
+                            <div class="pt-2 border-t border-gray-100">
+                                <div class="text-xs text-scg-gray">
+                                    <i class="fas fa-eye mr-1"></i> 열람 추적 활성화
+                                    <i class="fas fa-mouse-pointer ml-3 mr-1"></i> 클릭 추적 활성화
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-20">
+                <!-- Meeting Matching -->
+                <div>
+                    <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mb-6">
+                        <span class="text-2xl">🤝</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-scg-dark mb-4">미팅 매칭 자동화</h3>
+                    <p class="text-scg-gray mb-6">
+                        미팅 요청부터 일정 조율, 후속 조치까지 
+                        24시간 내 완전 자동화된 프로세스를 제공합니다.
+                    </p>
+                    <div class="space-y-4">
+                        <div class="flex items-center p-4 bg-purple-50 rounded-lg">
+                            <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold mr-4">1</div>
+                            <div>
+                                <div class="font-semibold text-scg-dark">미팅 요청</div>
+                                <div class="text-sm text-scg-gray">투자자/바이어가 관심 기업에 요청</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 bg-purple-50 rounded-lg">
+                            <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold mr-4">2</div>
+                            <div>
+                                <div class="font-semibold text-scg-dark">Staff 중개</div>
+                                <div class="text-sm text-scg-gray">2시간 내 캘린더 링크 공유</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center p-4 bg-purple-50 rounded-lg">
+                            <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white text-sm font-bold mr-4">3</div>
+                            <div>
+                                <div class="font-semibold text-scg-dark">자동 확인</div>
+                                <div class="text-sm text-scg-gray">일정 확정 후 자동 확인 메일</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-violet-50 p-8 rounded-2xl">
+                    <div class="text-center mb-6">
+                        <div class="text-6xl mb-4">🤝</div>
+                        <h4 class="text-xl font-bold text-scg-dark mb-2">35%+ 성사율</h4>
+                        <p class="text-scg-gray mb-6">요청에서 실제 미팅까지 높은 전환율</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-lg">
+                        <div class="text-sm text-scg-gray mb-2">미팅 유형</div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span class="text-sm">투자 미팅</span>
+                                <span class="text-sm font-semibold text-blue-600">40%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm">PoC/협업</span>
+                                <span class="text-sm font-semibold text-green-600">35%</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-sm">정부 지원</span>
+                                <span class="text-sm font-semibold text-purple-600">30%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it Works -->
+    <section class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-scg-dark mb-4">
+                    어떻게 작동하나요?
+                </h2>
+                <p class="text-xl text-scg-gray max-w-3xl mx-auto">
+                    3단계의 간단한 프로세스로 기업과 투자자를 연결합니다
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+                <!-- Step 1: Request -->
+                <div class="text-center group">
+                    <div class="relative mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-hand-pointer text-blue-600 text-2xl"></i>
+                        </div>
+                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-scg-blue text-white rounded-full flex items-center justify-center font-bold text-sm">
+                            1
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-scg-dark mb-4">요청</h3>
+                    <p class="text-scg-gray mb-4 leading-relaxed">
+                        관심 기업에서 <strong>'미팅 요청'</strong> 또는 <strong>'1‑pager 요청'</strong> 버튼을 클릭하세요.
+                    </p>
+                    <div class="flex justify-center gap-2">
+                        <span class="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">미팅 요청</span>
+                        <span class="px-3 py-1 bg-green-50 text-green-700 rounded-full text-sm">원페이지</span>
+                    </div>
+                </div>
+
+                <!-- Step 2: Email -->
+                <div class="text-center group">
+                    <div class="relative mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-envelope text-green-600 text-2xl"></i>
+                        </div>
+                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-scg-blue text-white rounded-full flex items-center justify-center font-bold text-sm">
+                            2
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-scg-dark mb-4">이메일 전송</h3>
+                    <p class="text-scg-gray mb-4 leading-relaxed">
+                        1‑pager는 <strong>이메일로만 전송</strong>되며 BCC로 추적됩니다. 다운로드는 제공하지 않습니다.
+                    </p>
+                    <div class="bg-gray-50 rounded-lg p-3 text-xs text-scg-gray">
+                        <div><strong>To:</strong> 투자자</div>
+                        <div><strong>CC:</strong> 기업 담당자</div>
+                        <div><strong>BCC:</strong> SCG 공용</div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Meeting -->
+                <div class="text-center group">
+                    <div class="relative mb-8">
+                        <div class="w-20 h-20 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                            <i class="fas fa-calendar-check text-purple-600 text-2xl"></i>
+                        </div>
+                        <div class="absolute -top-2 -right-2 w-8 h-8 bg-scg-blue text-white rounded-full flex items-center justify-center font-bold text-sm">
+                            3
+                        </div>
+                    </div>
+                    <h3 class="text-xl font-bold text-scg-dark mb-4">미팅 확정</h3>
+                    <p class="text-scg-gray mb-4 leading-relaxed">
+                        Staff가 <strong>일정 제안/확정</strong>을 도와드리며, 후속 관리까지 지원합니다.
+                    </p>
+                    <div class="flex justify-center gap-2">
+                        <span class="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-sm">24h 내</span>
+                        <span class="px-3 py-1 bg-orange-50 text-orange-700 rounded-full text-sm">35%+ 성사율</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Process Flow -->
+            <div class="mt-16 flex justify-center">
+                <div class="flex items-center space-x-4 md:space-x-8">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-scg-blue rounded-full flex items-center justify-center text-white font-bold text-sm">1</div>
+                        <div class="ml-2 text-sm text-scg-gray">요청</div>
+                    </div>
+                    <div class="w-8 h-0.5 bg-scg-gray"></div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-scg-blue rounded-full flex items-center justify-center text-white font-bold text-sm">2</div>
+                        <div class="ml-2 text-sm text-scg-gray">이메일</div>
+                    </div>
+                    <div class="w-8 h-0.5 bg-scg-gray"></div>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-scg-blue rounded-full flex items-center justify-center text-white font-bold text-sm">3</div>
+                        <div class="ml-2 text-sm text-scg-gray">미팅</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Types -->
+    <section class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold text-scg-dark mb-4">
+                    다양한 참여자를 위한 맞춤 기능
+                </h2>
+                <p class="text-xl text-scg-gray max-w-3xl mx-auto">
+                    초대 코드 기반 게이티드 플랫폼으로 양질의 네트워킹을 보장합니다
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Companies -->
+                <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-building text-scg-blue text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-scg-dark mb-3">기업</h3>
+                    <ul class="text-sm text-scg-gray space-y-2">
+                        <li>• 프로필/업데이트 관리</li>
+                        <li>• 원페이지 배포</li>
+                        <li>• 미팅 응답/일정 관리</li>
+                        <li>• 공개 범위 설정</li>
+                    </ul>
+                </div>
+
+                <!-- Investors -->
+                <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-chart-line text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-scg-dark mb-3">투자자/바이어</h3>
+                    <ul class="text-sm text-scg-gray space-y-2">
+                        <li>• 기업 검색/열람</li>
+                        <li>• 원페이지 요청</li>
+                        <li>• 미팅 요청</li>
+                        <li>• 즐겨찾기 관리</li>
+                    </ul>
+                </div>
+
+                <!-- AC Partners -->
+                <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-graduation-cap text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-scg-dark mb-3">AC 파트너</h3>
+                    <ul class="text-sm text-scg-gray space-y-2">
+                        <li>• 프로그램 정보 관리</li>
+                        <li>• 기업 모집 공지</li>
+                        <li>• 선정 결과 업데이트</li>
+                        <li>• 영상 링크 연동</li>
+                    </ul>
+                </div>
+
+                <!-- Government -->
+                <div class="bg-white p-6 rounded-xl shadow-sm text-center">
+                    <div class="w-16 h-16 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-landmark text-orange-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-scg-dark mb-3">지자체/정부</h3>
+                    <ul class="text-sm text-scg-gray space-y-2">
+                        <li>• 지역 기업 탐색</li>
+                        <li>• 정책 매칭</li>
+                        <li>• 해외 진출 지원</li>
+                        <li>• 성공 사례 수집</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Compliance/Trust Strip -->
+    <section class="py-12 bg-blue-50 border-y border-blue-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center mb-4">
+                    <i class="fas fa-shield-alt text-blue-600 text-2xl mr-3"></i>
+                    <h3 class="text-lg font-semibold text-blue-800">투명하고 안전한 플랫폼</h3>
+                </div>
+                <p class="text-blue-700 leading-relaxed max-w-4xl mx-auto">
+                    1‑pager는 다운로드가 아닌 <strong>이메일 전송으로만 제공</strong>되며, 요청 이력은 투명하게 기록됩니다.
+                    성공 수수료 <strong>5%</strong> 및 과금 정책은 약관에 명시되어 있습니다.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mt-6">
+                    <a href="#" class="text-blue-600 hover:text-blue-800 underline font-medium">약관/TOS</a>
+                    <a href="#" class="text-blue-600 hover:text-blue-800 underline font-medium">개인정보처리방침</a>
+                    <a href="#" class="text-blue-600 hover:text-blue-800 underline font-medium">성공수수료 정책</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beta Signup -->
+    <section id="beta" class="py-20 bg-gradient-to-br from-scg-blue to-blue-700 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">
+                베타 서비스 신청
+            </h2>
+            <p class="text-xl mb-8 text-blue-100">
+                2024년 9월 말 런칭 예정 | 3-6개월 무료 트라이얼 제공
+            </p>
+
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8">
+                <form id="beta-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="text-left">
+                            <label class="block text-sm font-semibold mb-2">기관/회사명 *</label>
+                            <input type="text" name="company" required 
+                                   class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white"
+                                   placeholder="예: ABC 벤처캐피털">
+                        </div>
+                        <div class="text-left">
+                            <label class="block text-sm font-semibold mb-2">이름 *</label>
+                            <input type="text" name="name" required 
+                                   class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white"
+                                   placeholder="홍길동">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="text-left">
+                            <label class="block text-sm font-semibold mb-2">이메일 *</label>
+                            <input type="email" name="email" required 
+                                   class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white"
+                                   placeholder="hong@example.com">
+                        </div>
+                        <div class="text-left">
+                            <label class="block text-sm font-semibold mb-2">직함</label>
+                            <input type="text" name="position" 
+                                   class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white"
+                                   placeholder="투자심사역, 대표이사 등">
+                        </div>
+                    </div>
+
+                    <div class="text-left">
+                        <label class="block text-sm font-semibold mb-2">사용자 유형 *</label>
+                        <select name="user_type" required 
+                                class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-white">
+                            <option value="" disabled selected class="text-gray-500">선택해주세요</option>
+                            <option value="company" class="text-gray-900">기업 (스타트업)</option>
+                            <option value="investor" class="text-gray-900">투자자/VC</option>
+                            <option value="buyer" class="text-gray-900">바이어/대기업</option>
+                            <option value="ac" class="text-gray-900">AC/인큐베이터</option>
+                            <option value="government" class="text-gray-900">지자체/정부기관</option>
+                        </select>
+                    </div>
+
+                    <div class="text-left">
+                        <label class="block text-sm font-semibold mb-2">관심 분야 (복수 선택 가능)</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <label class="flex items-center">
+                                <input type="checkbox" name="interests" value="adbm" class="mr-3 rounded">
+                                <span class="text-sm">AI/Data/Blockchain/Metaverse</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="interests" value="cl" class="mr-3 rounded">
+                                <span class="text-sm">Content/Lifestyle</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="interests" value="m4" class="mr-3 rounded">
+                                <span class="text-sm">Material/Manufacturing/Mobility</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="interests" value="bh" class="mr-3 rounded">
+                                <span class="text-sm">Bio/Healthcare</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" name="interests" value="rs" class="mr-3 rounded">
+                                <span class="text-sm">Robotics/Smart</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="text-left">
+                        <label class="block text-sm font-semibold mb-2">메시지</label>
+                        <textarea name="message" rows="3" 
+                                  class="w-full px-4 py-3 rounded-lg bg-white/20 border border-white/30 text-white placeholder-blue-200 focus:outline-none focus:ring-2 focus:ring-white"
+                                  placeholder="베타 서비스에 대한 기대사항이나 질문사항을 자유롭게 작성해주세요."></textarea>
+                    </div>
+
+                    <div class="text-left">
+                        <label class="flex items-start">
+                            <input type="checkbox" name="agree_terms" required class="mr-3 mt-1 rounded">
+                            <span class="text-sm">
+                                개인정보 수집·이용 동의 및 <strong>5% 성공수수료 정책</strong>에 동의합니다. 
+                                <a href="#" class="underline hover:text-blue-200">약관 보기</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full bg-white text-scg-blue px-8 py-4 rounded-lg font-semibold hover:bg-blue-50 transition-colors shadow-lg">
+                        <i class="fas fa-paper-plane mr-2"></i>
+                        베타 신청 제출
+                    </button>
+                </form>
+            </div>
+
+            <div class="text-center text-blue-200">
+                <p class="mb-2">📅 <strong>런칭 예정:</strong> 2024년 9월 말</p>
+                <p class="mb-2">🎁 <strong>트라이얼:</strong> 전체 3개월 무료 (서비스 고객 6개월)</p>
+                <p>💰 <strong>정기 과금:</strong> 월 ₩500,000 (VAT 별도) | 성공수수료 5%</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom CTA Bar -->
+    <section class="py-8 bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <h3 class="text-lg font-semibold text-scg-dark mb-1">초대가 필요하신가요?</h3>
+                    <p class="text-scg-gray">초대 요청 후 플랫폼을 둘러보세요</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <button class="bg-gray-100 hover:bg-gray-200 text-scg-dark px-6 py-3 rounded-lg font-semibold transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        초대코드 요청
+                    </button>
+                    <button id="bottom-login-btn" class="bg-scg-blue hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors">
+                        <i class="fas fa-sign-in-alt mr-2"></i>
+                        로그인
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-scg-dark text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div class="col-span-1 md:col-span-2">
+                    <div class="flex items-center mb-4">
+                        <div class="text-2xl font-bold text-white">SCG</div>
+                        <div class="ml-2 text-lg font-semibold text-gray-300">Dealflow Platform</div>
+                    </div>
+                    <p class="text-gray-400 mb-4 max-w-md">
+                        스타트업과 투자자를 지능적으로 연결하는 게이트드 딜플로우 플랫폼으로, 
+                        월간 업데이트 문화 정착과 미팅 매칭 자동화를 실현합니다.
+                    </p>
+                    <div class="text-sm text-gray-500">
+                        © 2024 SCG Dealflow Platform. All rights reserved.
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">플랫폼</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="companies.html" class="hover:text-white transition-colors">기업찾기</a></li>
+                        <li><a href="programs.html" class="hover:text-white transition-colors">AC 프로그램</a></li>
+                        <li><a href="stories.html" class="hover:text-white transition-colors">공지/성공사례</a></li>
+                        <li><a href="dashboard.html" class="hover:text-white transition-colors">내 보관함</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-semibold mb-4">참여</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#beta" class="hover:text-white transition-colors">베타 신청</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">문의하기</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">약관</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">개인정보처리방침</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
